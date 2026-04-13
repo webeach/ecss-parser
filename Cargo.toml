@@ -1,0 +1,28 @@
+[package]
+name = "ecss-parser"
+version = "0.1.0"
+edition = "2024"
+authors = []
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+cssparser = "0.37.0"
+napi = { version = "3", features = ["napi4", "serde-json"] }
+napi-derive = "3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[build-dependencies]
+napi-build = "2"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+
+[profile.release]
+lto = true
+strip = true

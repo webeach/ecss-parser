@@ -1,0 +1,113 @@
+{
+  "name": "@ecss/parser",
+  "version": "0.0.0",
+  "description": "High-performance ECSS parser written in Rust (napi-rs). Parses ECSS source into an AST.",
+  "keywords": [
+    "ast",
+    "css",
+    "ecss",
+    "napi",
+    "napi-rs",
+    "parser",
+    "rust",
+    "wasm"
+  ],
+  "homepage": "https://ecss.webea.ch",
+  "bugs": {
+    "url": "https://github.com/webeach/ecss-parser/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Ruslan Martynov",
+    "email": "github@webea.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webeach/ecss-parser"
+  },
+  "files": [
+    "dist",
+    "dist-wasm"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./wasm": {
+      "require": "./dist-wasm/ecss-parser.wasi.cjs"
+    },
+    "./wasm/browser": {
+      "default": "./dist-wasm/ecss-parser.wasi-browser.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "build": "napi build --platform --release --output-dir dist && node scripts/gen-esm.mjs",
+    "build:debug": "napi build --platform --output-dir dist && node scripts/gen-esm.mjs",
+    "build:wasm": "napi build --target wasm32-wasip1-threads --platform --release --output-dir dist-wasm",
+    "build:wasm:debug": "napi build --target wasm32-wasip1-threads --platform --output-dir dist-wasm",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint:rs": "cargo clippy -- -D warnings",
+    "lint:rs:fix": "cargo clippy --fix --allow-dirty --allow-staged",
+    "fmt:rs": "cargo fmt",
+    "fmt:rs:check": "cargo fmt -- --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "release": "semantic-release",
+    "prepare": "is-ci || husky"
+  },
+  "dependencies": {
+    "@napi-rs/wasm-runtime": "^1.1.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19",
+    "@commitlint/config-conventional": "^19",
+    "@emnapi/core": "^1.9.2",
+    "@emnapi/runtime": "^1.9.2",
+    "@napi-rs/cli": "^3",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "husky": "^9",
+    "is-ci": "^3.0.1",
+    "lint-staged": "^16.4.0",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.60.0",
+    "semantic-release": "^24.2.9",
+    "typescript": "^5",
+    "vitest": "^4.1.4"
+  },
+  "lint-staged": {
+    "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx,json}": [
+      "oxlint --fix",
+      "oxfmt"
+    ]
+  },
+  "napi": {
+    "binaryName": "ecss-parser",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ]
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": "^10"
+  },
+  "packageManager": "pnpm@10.7.1"
+}
