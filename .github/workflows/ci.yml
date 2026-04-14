@@ -140,11 +140,21 @@ jobs:
       - name: Build native addon
         run: pnpm napi build --platform --release --output-dir dist --target ${{ matrix.settings.target }}
 
-      - name: Upload artifact
+      - name: Upload native binary
         uses: actions/upload-artifact@v4
         with:
           name: bindings-${{ matrix.settings.target }}
           path: dist/*.node
+          if-no-files-found: error
+
+      - name: Upload JS bindings
+        if: matrix.settings.target == 'x86_64-unknown-linux-gnu'
+        uses: actions/upload-artifact@v4
+        with:
+          name: js-bindings
+          path: |
+            dist/index.js
+            dist/index.d.ts
           if-no-files-found: error
 
   build-wasm:
@@ -227,6 +237,15 @@ jobs:
 
       - name: Move native bindings
         run: pnpm napi artifacts --build-output-dir artifacts
+
+      - name: Download JS bindings
+        uses: actions/download-artifact@v4
+        with:
+          name: js-bindings
+          path: dist
+
+      - name: Generate ESM wrapper
+        run: node scripts/gen-esm.mjs
 
       - name: Download WASM artifact
         uses: actions/download-artifact@v4
