@@ -1,6 +1,6 @@
 {
   "name": "@ecss/parser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "High-performance ECSS parser written in Rust (napi-rs). Parses ECSS source into an AST.",
   "keywords": [
     "ast",

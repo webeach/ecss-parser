@@ -1,3 +1,10 @@
+## [0.1.2](https://github.com/webeach/ecss-parser/compare/v0.1.1...v0.1.2) (2026-04-14)
+
+
+### Bug Fixes
+
+* include dist/ in published npm package ([24ff9e6](https://github.com/webeach/ecss-parser/commit/24ff9e6cb2b221f2b12d7040e224679e7ffb907a))
+
 ## [0.1.1](https://github.com/webeach/ecss-parser/compare/v0.1.0...v0.1.1) (2026-04-14)
 
 
