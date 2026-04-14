@@ -1,6 +1,6 @@
 {
   "name": "@ecss/parser",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "High-performance ECSS parser written in Rust (napi-rs). Parses ECSS source into an AST.",
   "keywords": [
     "ast",
@@ -109,5 +109,11 @@
     "node": ">=18",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.7.1"
+  "packageManager": "pnpm@10.7.1",
+  "optionalDependencies": {
+    "@ecss/parser-darwin-x64": "0.0.0",
+    "@ecss/parser-darwin-arm64": "0.0.0",
+    "@ecss/parser-linux-x64-gnu": "0.0.0",
+    "@ecss/parser-win32-x64-msvc": "0.0.0"
+  }
 }
