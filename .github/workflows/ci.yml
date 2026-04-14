@@ -239,12 +239,15 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.WEBEACH_NPM_PUBLISH_TOKEN }}
 
-      - name: Publish platform packages
-        run: pnpm napi pre-publish --no-gh-release -t npm
-
-      - name: Release
+      - name: Release (version bump, changelog, git tag, GitHub Release)
         run: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.WEBEACH_GITHUB_RELEASE_TOKEN }}
           GH_TOKEN: ${{ secrets.WEBEACH_GITHUB_RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.WEBEACH_NPM_PUBLISH_TOKEN }}
+
+      - name: Publish platform packages
+        run: pnpm napi pre-publish --no-gh-release -t npm
+
+      - name: Publish main package
+        run: npm publish --access public

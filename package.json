@@ -90,9 +90,18 @@
     "typescript": "^5",
     "vitest": "^4.1.4"
   },
+  "optionalDependencies": {
+    "@ecss/parser-darwin-arm64": "0.0.0",
+    "@ecss/parser-darwin-x64": "0.0.0",
+    "@ecss/parser-linux-x64-gnu": "0.0.0",
+    "@ecss/parser-win32-x64-msvc": "0.0.0"
+  },
   "lint-staged": {
-    "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx,json}": [
+    "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}": [
       "oxlint --fix",
+      "oxfmt"
+    ],
+    "**/*.json": [
       "oxfmt"
     ]
   },
@@ -109,11 +118,5 @@
     "node": ">=18",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.7.1",
-  "optionalDependencies": {
-    "@ecss/parser-darwin-x64": "0.0.0",
-    "@ecss/parser-darwin-arm64": "0.0.0",
-    "@ecss/parser-linux-x64-gnu": "0.0.0",
-    "@ecss/parser-win32-x64-msvc": "0.0.0"
-  }
+  "packageManager": "pnpm@10.7.1"
 }
