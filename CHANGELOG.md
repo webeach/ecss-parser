@@ -1,3 +1,10 @@
+## [0.1.3](https://github.com/webeach/ecss-parser/compare/v0.1.2...v0.1.3) (2026-04-15)
+
+
+### Bug Fixes
+
+* publish wasm as separate @ecss/parser-wasm32-wasi package ([7d7c3ff](https://github.com/webeach/ecss-parser/commit/7d7c3ff7930b692453e29f70fefbe1824cacf0cb))
+
 ## [0.1.2](https://github.com/webeach/ecss-parser/compare/v0.1.1...v0.1.2) (2026-04-14)
 
 
