@@ -110,6 +110,8 @@ jobs:
             target: aarch64-apple-darwin
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+          - os: ubuntu-latest
+            target: wasm32-wasip1-threads
     runs-on: ${{ matrix.settings.os }}
     steps:
       - name: Check out repository
@@ -137,14 +139,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build native addon
+      - name: Build
         run: pnpm napi build --platform --release --output-dir dist --target ${{ matrix.settings.target }}
 
-      - name: Upload native binary
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: dist/*.node
+          path: |
+            dist/*.node
+            dist/*.wasm
+            dist/*.wasi.cjs
+            dist/*.wasi-browser.js
+            dist/wasi-worker.mjs
+            dist/wasi-worker-browser.mjs
+            dist/browser.js
           if-no-files-found: error
 
       - name: Upload JS bindings
@@ -157,53 +166,11 @@ jobs:
             dist/index.d.ts
           if-no-files-found: error
 
-  build-wasm:
-    name: Build (wasm)
-    if: |
-      github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next')
-    needs: [commitlint, lint, test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-wasip1-threads
-
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: wasm32-wasip1-threads
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build WASM
-        run: pnpm build:wasm
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: wasm
-          path: dist-wasm/
-          if-no-files-found: error
-
   publish:
     name: Publish
     if: |
       github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/next')
-    needs: [build, build-wasm]
+    needs: [build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -226,7 +193,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Download native artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           pattern: bindings-*
@@ -235,8 +202,8 @@ jobs:
       - name: Create npm platform dirs
         run: pnpm napi create-npm-dirs
 
-      - name: Move native bindings
-        run: pnpm napi artifacts --build-output-dir artifacts
+      - name: Move bindings
+        run: pnpm napi artifacts --build-output-dir artifacts/bindings-wasm32-wasip1-threads
 
       - name: Download JS bindings
         uses: actions/download-artifact@v4
@@ -246,12 +213,6 @@ jobs:
 
       - name: Generate ESM wrapper
         run: node scripts/gen-esm.mjs
-
-      - name: Download WASM artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: wasm
-          path: dist-wasm
 
       - name: Setup npm auth
         run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
